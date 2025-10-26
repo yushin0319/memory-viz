@@ -1,0 +1,28 @@
+# FastAPI and Uvicorn (ASGI server)
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+
+# HTTP client (for Memory MCP integration)
+httpx>=0.28.0
+
+# Environment variable management
+python-dotenv>=1.0.0
+
+# Data validation (included in FastAPI but explicit)
+pydantic>=2.10.0
+
+# CORS support
+python-multipart>=0.0.18
+
+# Testing tools
+pytest>=8.3.0
+pytest-asyncio>=0.25.0
+pytest-cov>=6.0.0
+
+# Test mocking
+pytest-mock>=3.14.0
+
+# Code quality
+black>=24.10.0
+flake8>=7.1.0
+mypy>=1.14.0

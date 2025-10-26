@@ -5,6 +5,7 @@
 import { useEffect } from 'react';
 import { Container, Box, Typography, Button, CircularProgress, Alert } from '@mui/material';
 import { useMemoryGraph } from './hooks/useMemoryGraph';
+import { GraphView } from './components/GraphView';
 import './App.css';
 
 function App() {
@@ -59,39 +60,19 @@ function App() {
           </Alert>
         )}
 
-        {/* データ表示 */}
+        {/* グラフ表示 */}
         {graph && !loading && (
           <Box sx={{ my: 4 }}>
             <Typography variant="h5" gutterBottom>
-              Graph Data (コンソールを確認してください)
+              Knowledge Graph
             </Typography>
-
-            <Box sx={{ my: 2 }}>
-              <Typography variant="h6">Entities: {graph.entities.length}</Typography>
-              <ul>
-                {graph.entities.map((entity, index) => (
-                  <li key={index}>
-                    <strong>{entity.name}</strong> ({entity.entityType})
-                    <ul>
-                      {entity.observations.map((obs, obsIndex) => (
-                        <li key={obsIndex}>{obs}</li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </ul>
-            </Box>
-
-            <Box sx={{ my: 2 }}>
-              <Typography variant="h6">Relations: {graph.relations.length}</Typography>
-              <ul>
-                {graph.relations.map((relation, index) => (
-                  <li key={index}>
-                    <strong>{relation.from}</strong> --{relation.relationType}→ <strong>{relation.to}</strong>
-                  </li>
-                ))}
-              </ul>
-            </Box>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              Entities: {graph.entities.length} | Relations: {graph.relations.length}
+            </Typography>
+            <GraphView
+              graph={graph}
+              onNodeClick={(nodeId) => console.log('Selected node:', nodeId)}
+            />
           </Box>
         )}
       </Box>

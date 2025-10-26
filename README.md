@@ -36,7 +36,24 @@ copy .env.example .env
 uvicorn main:app --reload
 ```
 
-### テスト実行
+### フロントエンド
+
+```bash
+cd frontend
+
+# パッケージインストール
+npm install
+
+# 環境変数設定（必要に応じて.envを編集）
+# デフォルト: VITE_API_BASE_URL=http://localhost:8000
+
+# 開発サーバー起動
+npm run dev
+```
+
+ブラウザで http://localhost:5173 にアクセスしてください。
+
+### テスト実行（バックエンド）
 
 ```bash
 # 全テスト実行

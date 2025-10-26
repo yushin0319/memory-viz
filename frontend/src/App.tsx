@@ -25,7 +25,7 @@ function App() {
   }, [graph]);
 
   return (
-    <Container maxWidth="lg">
+    <Box sx={{ maxWidth: '1200px' }}>
       <Box sx={{ my: 4 }}>
         {/* ヘッダー */}
         <Typography variant="h3" component="h1" gutterBottom>
@@ -76,7 +76,7 @@ function App() {
           </Box>
         )}
       </Box>
-    </Container>
+    </Box>
   );
 }
 

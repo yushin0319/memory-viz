@@ -1,8 +1,15 @@
 #root {
   max-width: 1280px;
-  margin: 0 auto;
+  margin: 0;
   padding: 2rem;
-  text-align: center;
+  text-align: left;
+}
+
+.cytoscape-container canvas {
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
 }
 
 .logo {

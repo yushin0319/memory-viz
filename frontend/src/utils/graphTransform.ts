@@ -10,12 +10,12 @@ import type { ElementDefinition } from 'cytoscape';
  */
 const getColorByType = (entityType: string): string => {
   const colorMap: Record<string, string> = {
-    user: '#4CAF50',        // Green
-    environment: '#2196F3', // Blue
-    project: '#FF9800',     // Orange
-    tool: '#9C27B0',        // Purple
-    concept: '#F44336',     // Red
-    default: '#607D8B',     // Blue Grey
+    user: '#4CAF50',
+    environment: '#2196F3',
+    project: '#FF9800',
+    tool: '#9C27B0',
+    concept: '#F44336',
+    default: '#607D8B',
   };
   return colorMap[entityType.toLowerCase()] || colorMap.default;
 };
@@ -31,7 +31,6 @@ const entityToNode = (entity: Entity): ElementDefinition => ({
     observations: entity.observations,
     color: getColorByType(entity.entityType),
   },
-  classes: entity.entityType.toLowerCase(),
 });
 
 /**
@@ -65,14 +64,14 @@ export const cytoscapeStylesheet = [
       'background-color': 'data(color)',
       'label': 'data(label)',
       'color': '#000',
-      'text-valign': 'center',
-      'text-halign': 'center',
+      'text-valign': 'center' as const,
+      'text-halign': 'center' as const,
       'font-size': '12px',
       'width': '60px',
       'height': '60px',
       'border-width': '2px',
       'border-color': '#fff',
-      'text-wrap': 'wrap',
+      'text-wrap': 'wrap' as const,
       'text-max-width': '80px',
     },
   },
@@ -82,11 +81,11 @@ export const cytoscapeStylesheet = [
       'width': 2,
       'line-color': '#999',
       'target-arrow-color': '#999',
-      'target-arrow-shape': 'triangle',
-      'curve-style': 'bezier',
+      'target-arrow-shape': 'triangle' as const,
+      'curve-style': 'bezier' as const,
       'label': 'data(label)',
       'font-size': '10px',
-      'text-rotation': 'autorotate',
+      'text-rotation': 'autorotate' as const,
       'text-margin-y': -10,
     },
   },

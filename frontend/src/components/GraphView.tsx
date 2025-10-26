@@ -1,9 +1,8 @@
 /**
- * GraphView - Cytoscape.jsでグラフを表示するコンポーネント
+ * GraphView - Cytoscape.jsでグラフを表示
  */
 
 import { useEffect, useRef } from 'react';
-import { Box } from '@mui/material';
 import cytoscape from 'cytoscape';
 import type { MemoryGraph } from '../types/memory';
 import { transformToCytoscape, cytoscapeStylesheet } from '../utils/graphTransform';
@@ -17,24 +16,34 @@ export const GraphView = ({ graph, onNodeClick }: GraphViewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
 
+  // Cytoscapeインスタンス初期化
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Cytoscapeインスタンス作成
+    // 固定サイズを明示的に指定
+    const container = containerRef.current;
+    const width = container.offsetWidth;
+    const height = container.offsetHeight;
+
+    console.log('[GraphView] Initializing with fixed size:', width, 'x', height);
+
     cyRef.current = cytoscape({
-      container: containerRef.current,
+      container: container,
       style: cytoscapeStylesheet as any,
-      layout: {
-        name: 'cose', // force-directed layout
-        animate: true,
-        animationDuration: 500,
-      },
+      // wheelSensitivity: 0.1,
     });
 
+    // Cytoscapeが自動的に追加したwindow resizeリスナーを無効化
+    // (内部的にresizeハンドラが登録されているため、これを上書き)
+    const cy = cyRef.current;
+
+    // resizeイベントを無効化するためのフラグ
+    (cy as any)._private = (cy as any)._private || {};
+    (cy as any)._private.autoResizeEnabled = false;
+
     // ノードクリックイベント
-    cyRef.current.on('tap', 'node', (event) => {
+    cy.on('tap', 'node', (event) => {
       const nodeId = event.target.id();
-      console.log('Node clicked:', nodeId);
       if (onNodeClick) {
         onNodeClick(nodeId);
       }
@@ -49,30 +58,46 @@ export const GraphView = ({ graph, onNodeClick }: GraphViewProps) => {
   useEffect(() => {
     if (!cyRef.current || !graph) return;
 
+    const cy = cyRef.current;
     const elements = transformToCytoscape(graph);
-    cyRef.current.elements().remove();
-    cyRef.current.add(elements);
 
-    // レイアウト再適用
-    cyRef.current.layout({
+    // 既存要素をクリア
+    cy.elements().remove();
+
+    // 新しい要素を追加
+    cy.add(elements);
+
+    // coseレイアウト（force-directed）
+    const layout = cy.layout({
       name: 'cose',
-      animate: true,
-      animationDuration: 500,
-    }).run();
+      animate: false,
+      fit: false,  // 自動フィットを無効化
+      padding: 30,
+      nodeRepulsion: 400000,
+      idealEdgeLength: 100,
+      edgeElasticity: 100,
+      randomize: false,
+    });
 
-    // 全体を表示するようにフィット
-    cyRef.current.fit(undefined, 50);
+    layout.run();
+
+    // レイアウト完了後、明示的に中央配置
+    cy.fit(cy.elements(), 30);
+    cy.center();
   }, [graph]);
 
   return (
-    <Box
+    <div
       ref={containerRef}
-      sx={{
-        width: '100%',
+      className="cytoscape-container"
+      style={{
+        width: '1200px',
         height: '600px',
         border: '1px solid #ddd',
-        borderRadius: 1,
+        borderRadius: '4px',
         backgroundColor: '#fafafa',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     />
   );

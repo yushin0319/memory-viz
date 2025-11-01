@@ -3,10 +3,11 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
-import { Container, Box, Typography, Button, CircularProgress, Alert, Grid } from '@mui/material';
+import { Box, CircularProgress, Alert } from '@mui/material';
 import { useMemoryGraph } from './hooks/useMemoryGraph';
 import { GraphView } from './components/GraphView';
 import { Sidebar } from './components/Sidebar';
+import { Toolbar } from './components/Toolbar';
 import type { Entity } from './types/memory';
 import './App.css';
 
@@ -42,63 +43,42 @@ function App() {
   }, [graph]);
 
   return (
-    <Box sx={{ maxWidth: '1200px' }}>
-      <Box sx={{ my: 4 }}>
-        {/* ヘッダー */}
-        <Typography variant="h3" component="h1" gutterBottom>
-          Memory MCP Visualization
-        </Typography>
-        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-          Memory MCPのナレッジグラフを可視化
-        </Typography>
+    <Box sx={{ p: 3, maxWidth: '1600px', margin: '0 auto' }}>
+      {/* ツールバー */}
+      {graph && (
+        <Toolbar
+          onRefresh={refresh}
+          loading={loading}
+          entityCount={graph.entities.length}
+          relationCount={graph.relations.length}
+        />
+      )}
 
-        {/* コントロール */}
-        <Box sx={{ my: 2 }}>
-          <Button
-            variant="contained"
-            onClick={refresh}
-            disabled={loading}
-          >
-            {loading ? 'Loading...' : 'Refresh Graph'}
-          </Button>
+      {/* ローディング */}
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+          <CircularProgress />
         </Box>
+      )}
 
-        {/* ローディング */}
-        {loading && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-            <CircularProgress />
-          </Box>
-        )}
+      {/* エラー表示 */}
+      {error && (
+        <Alert severity="error" sx={{ my: 2 }}>
+          Error: {error.message}
+        </Alert>
+      )}
 
-        {/* エラー表示 */}
-        {error && (
-          <Alert severity="error" sx={{ my: 2 }}>
-            Error: {error.message}
-          </Alert>
-        )}
-
-        {/* グラフ表示 */}
-        {graph && !loading && (
-          <Box sx={{ my: 4 }}>
-            <Typography variant="h5" gutterBottom>
-              Knowledge Graph
-            </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Entities: {graph.entities.length} | Relations: {graph.relations.length}
-            </Typography>
-
-            {/* グラフとサイドバーを横並び */}
-            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-              <GraphView
-                graph={graph}
-                selectedNodeId={selectedNodeId}
-                onNodeClick={handleNodeClick}
-              />
-              <Sidebar entity={selectedEntity} />
-            </Box>
-          </Box>
-        )}
-      </Box>
+      {/* グラフ表示 */}
+      {graph && !loading && (
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <GraphView
+            graph={graph}
+            selectedNodeId={selectedNodeId}
+            onNodeClick={handleNodeClick}
+          />
+          <Sidebar entity={selectedEntity} />
+        </Box>
+      )}
     </Box>
   );
 }

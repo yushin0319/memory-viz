@@ -20,7 +20,7 @@ export const Toolbar = ({ onRefresh, loading, entityCount, relationCount }: Tool
         justifyContent: 'space-between',
         alignItems: 'center',
         p: 2,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#424242',
         borderRadius: '4px',
         mb: 2,
       }}
@@ -38,10 +38,12 @@ export const Toolbar = ({ onRefresh, loading, entityCount, relationCount }: Tool
       {/* 右側：操作ボタン */}
       <Box>
         <Button
-          variant="contained"
+          variant="outlined"
+          color="inherit"
           startIcon={<RefreshIcon />}
           onClick={onRefresh}
           disabled={loading}
+          sx={{ color: 'white', borderColor: 'white' }}
         >
           {loading ? 'Loading...' : 'Refresh'}
         </Button>

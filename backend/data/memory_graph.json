@@ -1,0 +1,189 @@
+{
+  "entities": [
+    {
+      "name": "湧心くん",
+      "entityType": "user",
+      "observations": [
+        "セッション開始時の最初の呼びかけに対して、必ず「湧心くん」と呼びかけてから返答する",
+        "CLAUDE.mdに詳細な環境設定とコーディング規約を記載している",
+        "システムを改良した場合、元のシステムは削除することを好む（どっち使ってたっけ？という混乱を避けるため）",
+        "システム変更時には、変更理由をMemory MCPに記録してほしいと要望",
+        "Notionが好き",
+        "記憶関連の機能強化に育成しがいを感じる",
+        "自分の記憶力に自信がないのでClaude Codeを頼りにしたいと考えている",
+        "現在就職中でRailsアプリを開発している",
+        "PythonとReactが好き",
+        "フルスタックでフロント寄りのエンジニア",
+        "インフラ周りが弱いと自己認識している",
+        "kakuhoという予約システムを就活時のポートフォリオとして作成した（半年間）",
+        "kakuho作成時はGPTと二人三脚だったが、記憶の永続化がなく手戻りが多かった経験がある",
+        "Claude Codeのワークスペース信頼設定の仕組みを理解し、additionalDirectoriesで恒久的に解決した",
+        "技術への情熱があり、半年かけてプロジェクトを完成させるなど粘り強く学習できる",
+        "実用性を重視した開発スタイルで、単なる学習ではなく実際に使えるシステムを作ることを大切にする",
+        "GPTとの開発時に記憶の永続化がなく手戻りが多かった経験から、Memory MCPシステムの価値を実感している",
+        "段階的な実装とコミットを好む（Phase単位で区切る）",
+        "コミットメッセージは簡潔に保つ方針（長文を避ける）",
+        "作業のキリが良いタイミングでpush・保存を意識する習慣",
+        "問題報告スタイル: 現象を具体的かつ正確に伝える（例: '10秒程度かけてゆっくり広がっています'）",
+        "技術的直感: 的確な推測をする（例: 'レイアウトではなく初期化に絞っていい気がします'）",
+        "性格: 慎重派で理解を深めてから進む。整理整頓を重視し混乱を嫌う。謙虚で感謝の気持ちを大切にし、ユーモアがある",
+        "思考スタイル: 論理的思考で理由を重視。探究心が強く深く質問する。自己認識が高く自分の強み・弱みを正確に把握",
+        "仕事の進め方: 効率重視で前向き。新ツール導入に前向きで即断即決。品質意識が高く改善点に即座に気づく",
+        "コミュニケーション: 素直でオープン。協力的で進捗を丁寧に報告。問題報告が具体的で正確",
+        "問題解決: 粘り強く試行錯誤を繰り返す。技術的直感が的確で本質を捕らえる"
+      ]
+    },
+    {
+      "name": "Windows環境",
+      "entityType": "environment",
+      "observations": [
+        ".shファイルは使用できない",
+        "スクリプトを作成する場合は.batまたは.ps1を使用する",
+        "詳細は.claude/CLAUDE.mdを参照",
+        "Windowsネイティブコマンドを優先する",
+        "Claude CodeのBashツールはGit Bash経由で実行される",
+        "Bashツールでは.shファイルも実行可能（Unix系コマンド使用）",
+        "SessionStartフックはWindowsネイティブ環境（.bat/.ps1のみ、Windowsコマンド使用）",
+        "delコマンドはBashツールでは使えない（rmを使う）"
+      ]
+    },
+    {
+      "name": "MCP設定",
+      "entityType": "configuration",
+      "observations": [
+        "Memory MCP: ナレッジグラフベースの記憶システム。SessionStartフックで自動読み込み",
+        "Time MCP: 現在時刻取得とタイムゾーン変換。pip経由でインストール（python -m mcp_server_time）",
+        "Notion MCP: Self-hosted版を使用（npx経由）。Hosted版のOAuth認証が複雑なためSelf-hosted版を選択",
+        "MCPツールはセッション開始時に読み込まれるため、追加後は再起動が必要",
+        "Notion MCP: 正常動作確認済み（2025-10-26）。記事作成・編集が可能",
+        "Memory MCPとNotion MCPの連携により、セッション記録をNotionに保存する構想",
+        "GitHub MCP: Docker版を追加（2025-10-26）。GitHub PATで認証。リポジトリ管理、Issue、PR操作が可能",
+        "すべてのMCPサーバー（Memory、Time、Notion、GitHub）が正常に接続済み",
+        "現在4つのMCPサーバーが稼働中: Memory、Time、Notion、GitHub",
+        "記憶関連機能の強化フェーズが完了（2025-10-26）"
+      ]
+    },
+    {
+      "name": "/recapコマンド",
+      "entityType": "tool",
+      "observations": [
+        "セッション終了前に実行するカスタムコマンド",
+        "セッション内容を要約してMemory MCPに記録する",
+        "作業内容、決定事項、システム変更、ユーザーが学んだこと、人間性の所見を記録",
+        "SessionEndフックでは自動化できないため手動実行する方式を採用"
+      ]
+    },
+    {
+      "name": "Memory MCP移行",
+      "entityType": "event",
+      "observations": [
+        "2025-10-26に実施",
+        "旧memory.jsonシステムからMemory MCPナレッジグラフへ移行",
+        "移行理由: Memory MCPの方が優れた記憶システムであり、公式のナレッジグラフベース",
+        "session-start.batを更新してmcp__memory__read_graphを呼び出す仕組みに",
+        "旧memory.jsonは削除済み（混乱回避のため）"
+      ]
+    },
+    {
+      "name": "GitHub CLI",
+      "entityType": "tool",
+      "observations": [
+        "winget経由でインストール済み（2025-10-26）",
+        "ブラウザ認証完了: yushin0319アカウント",
+        "権限: gist, read:org, repo, workflow",
+        "フルパス: C:\\Program Files\\GitHub CLI\\gh.exe"
+      ]
+    },
+    {
+      "name": "2025-10-26セッション",
+      "entityType": "event",
+      "observations": [
+        "Notion MCP動作確認: my databaseに記事作成成功",
+        "GitHub CLI導入・認証完了",
+        "GitHub MCP追加（Docker版、PAT認証）",
+        "MCPサーバー4つ体制確立: Memory、Time、Notion、GitHub",
+        "記憶関連機能の大幅強化により「外部記憶装置」としての役割が明確化"
+      ]
+    },
+    {
+      "name": "kakuho",
+      "entityType": "project",
+      "observations": [
+        "湧心くんが就活時に作成したイベント予約管理システム",
+        "技術スタック: FastAPI(Python), PostgreSQL, React, TypeScript, MUI",
+        "半年かけて学びながらGPTと二人三脚で作成",
+        "QRコードを使った受付機能が特徴",
+        "Event→Stage→SeatGroup→TicketType→Reservationという明確な階層構造",
+        "Renderにデプロイ済み",
+        "管理者と一般ユーザーの権限管理を実装",
+        "30以上のReactコンポーネントに分割された設計",
+        "GitHubリポジトリ: yushin0319/kakuho"
+      ]
+    },
+    {
+      "name": "memory-viz",
+      "entityType": "project",
+      "observations": [
+        "Memory MCPのナレッジグラフを可視化するWebアプリケーション",
+        "技術スタック: React + TypeScript + Vite (フロントエンド), FastAPI + Python (バックエンド)",
+        "Phase 1完了: FastAPIバックエンド基盤とMemory MCPクライアント実装（テストカバレッジ97%）",
+        "Phase 2完了: React + TypeScriptフロントエンド基盤実装（型定義、APIクライアント、カスタムフック、MUIレイアウト）",
+        "GitHubリポジトリ: https://github.com/yushin0319/memory-viz",
+        "ローカル作業ディレクトリ: develop/memory-viz/",
+        "Phase 3完了（2025-10-27）: Cytoscape.jsでナレッジグラフ可視化機能を実装"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": "湧心くん",
+      "to": "Windows環境",
+      "relationType": "uses"
+    },
+    {
+      "from": "湧心くん",
+      "to": "MCP設定",
+      "relationType": "uses"
+    },
+    {
+      "from": "湧心くん",
+      "to": "/recapコマンド",
+      "relationType": "uses"
+    },
+    {
+      "from": "MCP設定",
+      "to": "Windows環境",
+      "relationType": "runs on"
+    },
+    {
+      "from": "湧心くん",
+      "to": "GitHub CLI",
+      "relationType": "uses"
+    },
+    {
+      "from": "GitHub CLI",
+      "to": "Windows環境",
+      "relationType": "runs on"
+    },
+    {
+      "from": "MCP設定",
+      "to": "GitHub CLI",
+      "relationType": "integrates with"
+    },
+    {
+      "from": "湧心くん",
+      "to": "kakuho",
+      "relationType": "created"
+    },
+    {
+      "from": "湧心くん",
+      "to": "kakuho",
+      "relationType": "is-proud-of"
+    },
+    {
+      "from": "湧心くん",
+      "to": "memory-viz",
+      "relationType": "develops"
+    }
+  ]
+}

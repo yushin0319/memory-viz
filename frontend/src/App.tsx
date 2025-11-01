@@ -2,14 +2,31 @@
  * Memory MCP Visualization - メインアプリケーション
  */
 
-import { useEffect } from 'react';
-import { Container, Box, Typography, Button, CircularProgress, Alert } from '@mui/material';
+import { useEffect, useState, useCallback } from 'react';
+import { Container, Box, Typography, Button, CircularProgress, Alert, Grid } from '@mui/material';
 import { useMemoryGraph } from './hooks/useMemoryGraph';
 import { GraphView } from './components/GraphView';
+import { Sidebar } from './components/Sidebar';
+import type { Entity } from './types/memory';
 import './App.css';
 
 function App() {
   const { graph, loading, error, refresh } = useMemoryGraph();
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  /**
+   * ノードクリックハンドラ（useCallbackでメモ化して再レンダリングを防ぐ）
+   */
+  const handleNodeClick = useCallback((nodeId: string) => {
+    setSelectedNodeId(nodeId);
+  }, []);
+
+  /**
+   * 選択中のエンティティを取得
+   */
+  const selectedEntity: Entity | null = selectedNodeId && graph
+    ? graph.entities.find((e) => e.name === selectedNodeId) || null
+    : null;
 
   /**
    * グラフデータをコンソールに出力（開発用）
@@ -69,10 +86,16 @@ function App() {
             <Typography variant="body2" color="text.secondary" gutterBottom>
               Entities: {graph.entities.length} | Relations: {graph.relations.length}
             </Typography>
-            <GraphView
-              graph={graph}
-              onNodeClick={(nodeId) => console.log('Selected node:', nodeId)}
-            />
+
+            {/* グラフとサイドバーを横並び */}
+            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+              <GraphView
+                graph={graph}
+                selectedNodeId={selectedNodeId}
+                onNodeClick={handleNodeClick}
+              />
+              <Sidebar entity={selectedEntity} />
+            </Box>
           </Box>
         )}
       </Box>

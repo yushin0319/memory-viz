@@ -9,10 +9,11 @@ import { transformToCytoscape, cytoscapeStylesheet } from '../utils/graphTransfo
 
 interface GraphViewProps {
   graph: MemoryGraph | null;
+  selectedNodeId?: string | null;
   onNodeClick?: (nodeId: string) => void;
 }
 
-export const GraphView = ({ graph, onNodeClick }: GraphViewProps) => {
+export const GraphView = ({ graph, selectedNodeId, onNodeClick }: GraphViewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
 
@@ -25,12 +26,16 @@ export const GraphView = ({ graph, onNodeClick }: GraphViewProps) => {
     const width = container.offsetWidth;
     const height = container.offsetHeight;
 
-    console.log('[GraphView] Initializing with fixed size:', width, 'x', height);
-
     cyRef.current = cytoscape({
       container: container,
       style: cytoscapeStylesheet as any,
-      // wheelSensitivity: 0.1,
+      // ズーム/パン操作を明示的に有効化
+      zoomingEnabled: true,
+      userZoomingEnabled: true,
+      panningEnabled: true,
+      userPanningEnabled: true,
+      boxSelectionEnabled: false,
+      autoungrabify: false,
     });
 
     // Cytoscapeが自動的に追加したwindow resizeリスナーを無効化
@@ -85,6 +90,39 @@ export const GraphView = ({ graph, onNodeClick }: GraphViewProps) => {
     cy.fit(cy.elements(), 30);
     cy.center();
   }, [graph]);
+
+  // 選択ノードハイライト処理
+  useEffect(() => {
+    if (!cyRef.current) return;
+
+    const cy = cyRef.current;
+
+    if (!selectedNodeId) {
+      // 選択解除時、すべてのノードを通常表示
+      cy.elements().removeClass('highlighted dimmed');
+      return;
+    }
+
+    // 選択ノードを取得
+    const selectedNode = cy.getElementById(selectedNodeId);
+
+    if (selectedNode.length === 0) {
+      cy.elements().removeClass('highlighted dimmed');
+      return;
+    }
+
+    // 選択ノードと接続先（隣接ノード＋エッジ）を取得
+    const neighborhood = selectedNode.closedNeighborhood();
+
+    // すべての要素をリセット
+    cy.elements().removeClass('highlighted dimmed');
+
+    // 選択ノードと接続先をハイライト
+    neighborhood.addClass('highlighted');
+
+    // それ以外のノード・エッジを半透明化
+    cy.elements().not(neighborhood).addClass('dimmed');
+  }, [selectedNodeId]);
 
   return (
     <div

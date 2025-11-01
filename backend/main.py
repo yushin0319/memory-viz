@@ -8,11 +8,20 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 
 from routers import memory
+from services.memory_client import get_memory_client
 
 # 環境変数読み込み
 load_dotenv()
+
+# Memory MCPクライアントにJSONファイルパスを設定
+data_file = Path(__file__).parent / "data" / "memory_graph.json"
+if data_file.exists():
+    client = get_memory_client()
+    client.set_data_file(data_file)
+    print(f"[OK] Memory MCP data loaded from: {data_file}")
 
 # FastAPIアプリケーション作成
 app = FastAPI(

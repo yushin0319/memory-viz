@@ -96,4 +96,29 @@ export const cytoscapeStylesheet = [
       'border-color': '#FFC107',
     },
   },
+  // ハイライトスタイル
+  {
+    selector: 'node.highlighted',
+    style: {
+      'border-width': '4px',
+      'border-color': '#FFC107',
+      'opacity': 1,
+    },
+  },
+  {
+    selector: 'edge.highlighted',
+    style: {
+      'line-color': '#FFC107',
+      'target-arrow-color': '#FFC107',
+      'width': 3,
+      'opacity': 1,
+    },
+  },
+  // 半透明化スタイル
+  {
+    selector: '.dimmed',
+    style: {
+      'opacity': 0.3,
+    },
+  },
 ];
